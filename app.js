@@ -3,6 +3,7 @@ import "https://cdn.jsdelivr.net/npm/gun/sea.js";
 
 let gun = new GUN();
 let user = gun.user().recall({sessionStorage: false}); 
+let ack_value;
 
 /***
  @param {string} alias - Username or Alias which can be used to find a user.
@@ -12,12 +13,13 @@ let user = gun.user().recall({sessionStorage: false});
   */
 function createUser(alias, pass, cb, opt){
     try{
-        user.create(alias, pass, opt);
+        user.create(alias, pass, function(ack){
         if (user.is) {
-            alert('You are logged in');
+            alert(`Account create at ${ack.pub}`);
          } else {
             alert('You are not logged in');
          }
+        });
     }
     catch(ex){
         alert(ex)
@@ -35,7 +37,9 @@ function createUser(alias, pass, cb, opt){
 */
 function authUser(alias, pass, cb, opt){
     try{
-        user.auth(alias, pass, cb, opt)
+        user.auth(alias, pass, (ack) => {
+            ack_value = ack
+        })
         if (user.is) {
             alert('You are logged in');
          } else {
@@ -47,6 +51,37 @@ function authUser(alias, pass, cb, opt){
     }
 }
 
+
+function checkUserStatus(){
+    if (user.is) {
+        return true;
+     } else {
+        return false;
+     }
+}
+
+async function submitData(){
+    await ack_value;
+    if (checkUserStatus()){
+        gun.get("pub/" + ack_value.pub).put({hello: "world"});
+    }
+    else{
+        alert('Submit Data broke')
+    }
+}
+
+async function readData(){
+    await ack_value;
+    if (checkUserStatus()){
+        gun.get("pub/" + ack_value.pub).get('hello').once((val, key) => {
+            alert(`READ: ${val, key}`)
+        })    }
+    else{
+        alert('Read Data broke')
+    }
+}
+
+
 let username = document.getElementById('username');
 let email = document.getElementById('email');
 let password = document.getElementById('password');
@@ -56,4 +91,12 @@ document.getElementById('signup').addEventListener('click', () => {
 })
 document.getElementById('login').addEventListener('click', () => {
     authUser(username.value, password.value)
+})
+
+document.getElementById('submit').addEventListener('click', () => {
+    submitData();
+})
+
+document.getElementById('read').addEventListener('click', () => {
+    readData();
 })

@@ -1,7 +1,14 @@
 import GUN from "https://cdn.skypack.dev/gun";
 import "https://cdn.jsdelivr.net/npm/gun/sea.js";
 
-var gun = new GUN(['http://localhost:8765/gun', 'https://gun-manhattan.herokuapp.com/gun']);
+let gun = new GUN({
+    peers: ["https://59.thesource.fm/gun"],
+    file: 'source',
+    localStorage: false,
+    radisk: true,
+    axe: true
+})
+
 let user = gun.user().recall({sessionStorage: true}); 
 let ack_value;
 let username;
@@ -11,6 +18,7 @@ document.getElementById('read').hidden=true;
 document.getElementById('login').hidden=false;
 document.getElementById('signup').hidden=false;
 document.getElementById('message').hidden=true;
+document.getElementById("signOutBtn").hidden=true;
 
 /***
  @param {string} alias - Username or Alias which can be used to find a user.
@@ -56,6 +64,8 @@ function authUser(alias, pass, cb, opt){
             document.getElementById('username').hidden=true;
             document.getElementById('password').hidden=true;
             document.getElementById('message').hidden=false;
+            document.getElementById("signOutBtn").hidden=false;
+
             username = alias;
 
          } else {
@@ -69,6 +79,11 @@ function authUser(alias, pass, cb, opt){
     catch(ex){
         alert(ex)
     }
+}
+
+function signOut(username){
+    window.location.reload();
+    username='';
 }
 
 function checkUserStatus(){
@@ -102,12 +117,6 @@ async function readData(){
     }
 }
 
-
-function signOut(){
-    username = ''
-    location.reload();
-}
-
 let username_div = document.getElementById('username');
 let password = document.getElementById('password');
 
@@ -124,4 +133,8 @@ document.getElementById('submit').addEventListener('click', () => {
 
 document.getElementById('read').addEventListener('click', () => {
     readData();
+})
+
+document.getElementById('signOutBtn').addEventListener('click', () => {
+    signOut();
 })

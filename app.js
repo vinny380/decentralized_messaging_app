@@ -53,7 +53,6 @@ function authUser(alias, pass, cb, opt){
             document.getElementById('read').hidden=false;
             document.getElementById('login').hidden=true;
             document.getElementById('signup').hidden=true;
-            document.getElementById('email').hidden=true;
             document.getElementById('username').hidden=true;
             document.getElementById('password').hidden=true;
             document.getElementById('message').hidden=false;
@@ -110,7 +109,6 @@ function signOut(){
 }
 
 let username_div = document.getElementById('username');
-let email = document.getElementById('email');
 let password = document.getElementById('password');
 
 document.getElementById('signup').addEventListener('click', () => {

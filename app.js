@@ -4,6 +4,7 @@ import "https://cdn.jsdelivr.net/npm/gun/sea.js";
 let gun = new GUN();
 let user = gun.user().recall({sessionStorage: false}); 
 let ack_value;
+let username;
 
 document.getElementById('submit').hidden=true;
 document.getElementById('read').hidden=true;
@@ -56,6 +57,7 @@ function authUser(alias, pass, cb, opt){
             document.getElementById('username').hidden=true;
             document.getElementById('password').hidden=true;
             document.getElementById('message').hidden=false;
+            username = alias;
 
          } else {
             alert('You are not logged in');
@@ -82,7 +84,7 @@ function checkUserStatus(){
 async function submitData(){
     await ack_value;
     if (checkUserStatus()){
-        gun.get("pub/" + ack_value.pub).put({hello: "world"});
+        gun.get("pub/" + ack_value.pub).put({username: document.getElementById('message').value});
     }
     else{
         alert('Submit Data broke')
@@ -92,24 +94,26 @@ async function submitData(){
 async function readData(){
     await ack_value;
     if (checkUserStatus()){
-        gun.get("pub/" + ack_value.pub).get('hello').once((val, key) => {
+        gun.get("pub/" + ack_value.pub).get('username').once((val, key) => {
             alert(`READ:${key} ${val}`)
-        })    }
+            }
+        )
+    }
     else{
         alert('Read Data broke')
     }
 }
 
 
-let username = document.getElementById('username');
+let username_div = document.getElementById('username');
 let email = document.getElementById('email');
 let password = document.getElementById('password');
 
 document.getElementById('signup').addEventListener('click', () => {
-    createUser(username.value, password.value)
+    createUser(username_div.value, password.value)
 })
 document.getElementById('login').addEventListener('click', () => {
-    authUser(username.value, password.value)
+    authUser(username_div.value, password.value)
 })
 
 document.getElementById('submit').addEventListener('click', () => {

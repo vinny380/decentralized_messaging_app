@@ -1,8 +1,8 @@
 import GUN from "https://cdn.skypack.dev/gun";
 import "https://cdn.jsdelivr.net/npm/gun/sea.js";
 
-let gun = new GUN();
-let user = gun.user().recall({sessionStorage: false}); 
+var gun = new GUN(['http://localhost:8765/gun', 'https://gun-manhattan.herokuapp.com/gun']);
+let user = gun.user().recall({sessionStorage: true}); 
 let ack_value;
 let username;
 
@@ -32,7 +32,7 @@ function createUser(alias, pass, cb, opt){
         alert(ex)
     }
 }
-// gun.get("~@alias").once(callback)
+
 
 /** 
 @param {string} alias - Username or Alias which can be used to find a user.
@@ -47,7 +47,7 @@ function authUser(alias, pass, cb, opt){
         user.auth(alias, pass, (ack) => {
             ack_value = ack
         })
-        if (user.is) {
+        if (checkUserStatus()) {
             alert('You are logged in');
             document.getElementById('submit').hidden=false;
             document.getElementById('read').hidden=false;
@@ -72,7 +72,6 @@ function authUser(alias, pass, cb, opt){
     }
 }
 
-
 function checkUserStatus(){
     if (user.is) {
         return true;
@@ -84,7 +83,7 @@ function checkUserStatus(){
 async function submitData(){
     await ack_value;
     if (checkUserStatus()){
-        gun.get("pub/" + ack_value.pub).put({username: document.getElementById('message').value});
+        gun.get("pub/" + ack_value.pub).put({username: `${username} says: ${document.getElementById('message').value}`});
     }
     else{
         alert('Submit Data broke')
@@ -104,6 +103,11 @@ async function readData(){
     }
 }
 
+
+function signOut(){
+    username = ''
+    location.reload();
+}
 
 let username_div = document.getElementById('username');
 let email = document.getElementById('email');

@@ -5,6 +5,12 @@ let gun = new GUN();
 let user = gun.user().recall({sessionStorage: false}); 
 let ack_value;
 
+document.getElementById('submit').hidden=true;
+document.getElementById('read').hidden=true;
+document.getElementById('login').hidden=false;
+document.getElementById('signup').hidden=false;
+document.getElementById('message').hidden=true;
+
 /***
  @param {string} alias - Username or Alias which can be used to find a user.
  @param {string} pass - Passphrase that will be extended with PBKDF2 to make it a secure way to login.
@@ -42,8 +48,21 @@ function authUser(alias, pass, cb, opt){
         })
         if (user.is) {
             alert('You are logged in');
+            document.getElementById('submit').hidden=false;
+            document.getElementById('read').hidden=false;
+            document.getElementById('login').hidden=true;
+            document.getElementById('signup').hidden=true;
+            document.getElementById('email').hidden=true;
+            document.getElementById('username').hidden=true;
+            document.getElementById('password').hidden=true;
+            document.getElementById('message').hidden=false;
+
          } else {
             alert('You are not logged in');
+            document.getElementById('submit').hidden=true;
+            document.getElementById('read').hidden=true;
+            document.getElementById('login').hidden=false;
+            document.getElementById('signup').hidden=false;
          }
     }
     catch(ex){
@@ -74,7 +93,7 @@ async function readData(){
     await ack_value;
     if (checkUserStatus()){
         gun.get("pub/" + ack_value.pub).get('hello').once((val, key) => {
-            alert(`READ: ${val, key}`)
+            alert(`READ:${key} ${val}`)
         })    }
     else{
         alert('Read Data broke')

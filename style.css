@@ -1,0 +1,57 @@
+body, .login-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #222222;
+  }
+  
+input, button {
+    margin: 10px 0;
+}
+
+input, textarea {
+
+    background-color : #3e3e3e; 
+    border-top-style: hidden;
+    border-right-style: hidden;
+    border-left-style: hidden;
+    border-bottom-style: groove;
+    width: 40%;
+    margin: .5rem 0;
+    box-sizing: border-box;
+    padding: 1px 3px; 
+    color: #f2f2f2;
+}
+
+input:focus{
+    outline: none;
+}
+
+.login-box{
+    background-color: #3e3e3e;
+    margin-top: 13%;
+    padding: 3rem;
+    border-radius: 8%;
+    width: 25%;
+}
+
+#signup, #login, #submit, #read {
+    transition-duration: 0.4s;
+    background-color: #d1d1d100;
+    color: white;
+    border: 2px solid #89CFF0;
+    border-radius: 1rem;
+    font: Archivo;
+    font-size: 1rem;
+    width: 25%;
+    padding: 10px;
+    cursor: pointer;
+}
+  
+#signup:hover, #login:hover, #submit:hover, #read:hover {
+    background-color: #89CFF0;
+    transition-delay:0s;
+    color: white;
+}
+

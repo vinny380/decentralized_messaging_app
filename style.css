@@ -68,4 +68,13 @@ input:focus{
     color: white;
 }
 
+.userMessage p{
+    color: orange;
+    margin-left: 15rem;
+}
+
+.peerMessage p{
+    color: red;
+    margin-left: -15rem;
+}
 

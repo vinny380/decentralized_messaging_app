@@ -9,7 +9,9 @@ let gun = new GUN({
     axe: true
 })
 
-let user = gun.user().recall({sessionStorage: true}); 
+// let gun = new GUN();
+
+let user = gun.user().recall({sessionStorage: false}); 
 let ack_value;
 let username;
 
@@ -94,10 +96,17 @@ function checkUserStatus(){
      }
 }
 
+let messageObj = {username:'',
+                    message:''};
+
 async function submitData(){
     await ack_value;
     if (checkUserStatus()){
-        gun.get("pub/" + ack_value.pub).put({username: `${username} says: ${document.getElementById('message').value}`});
+        messageObj.message = document.getElementById('message').value
+        messageObj.username = username
+        
+        gun.get("pub/" + ack_value.pub).put({username: messageObj});
+        readData();
     }
     else{
         alert('Submit Data broke')
@@ -108,8 +117,20 @@ async function readData(){
     await ack_value;
     if (checkUserStatus()){
         gun.get("pub/" + ack_value.pub).get('username').once((val, key) => {
-            alert(`READ:${key} ${val}`)
+            if (val.username == username) {
+                // alert(`READ:${key} ${val.username} says ${val.message}`)
+                // document.getElementById('userMessage').innerHTML = val.message;
+                const para = document.createElement("p");
+                const node = document.createTextNode(val.message);
+                para.appendChild(node);
+                const element = document.getElementById('userMessage');
+                element.appendChild(para);
             }
+            else {
+                document.getElementById('peerMessage').innerHTML = val.message;
+
+            }
+        }
         )
     }
     else{
